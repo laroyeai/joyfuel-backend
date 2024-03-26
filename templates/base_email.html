@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper" style="max-width: 600px; display: flex; margin: auto;">
+        <div class="content">
+            <div class="header">
+                <div class="logo-wrapper">
+                    <img src="https://api.laroye.ai/static/images/laroye-logo-working-mark-a.png" alt="Company Logo" width="50px">
+                </div>
+                <h3 class="title" style="font-size: 25px; margin: 0 0 25px 0;">
+                    {% block in_mail_title %}{% endblock %}
+                </h3>
+                <p style="color: #EC6130; font-weight: bold; margin: 0">Dear {{ username }},</p>
+                <p style="margin: 0;"><b>Greetings from Laroye AI!</b></p>
+            </div>
+            <div class="body">
+                {% block main_body %}
+                {% endblock %}
+            </div>
+            <div class="footer">
+                <p style="margin: 0;"><em>Warm Regards,</em></p>
+                <p style="color: #EC6130; margin: 0"><strong>The Laroye AI Team.</strong></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
