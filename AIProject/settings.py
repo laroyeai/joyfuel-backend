@@ -184,3 +184,10 @@ BASE_URL = 'http://127.0.0.1:8000' if DEBUG else 'https://laroye.ai'
 #     'http://laroye.ai/',
 # ]
 
+# CORS_ALLOWED_ORIGINS = [
+#     'https://your-webflow-site-url.com',  # Replace with your Webflow site's URL
+#     # Add more origins if needed
+# ]
+
+# If you want to allow all origins, use the following:
+CORS_ALLOW_ALL_ORIGINS = True
