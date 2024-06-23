@@ -14,6 +14,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.files.storage import default_storage
 from .tasks import process_file
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 class LoginAPIView(APIView):
@@ -43,6 +45,7 @@ class UserRegistrationAPIView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class FileUploadView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
