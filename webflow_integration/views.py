@@ -79,13 +79,18 @@ def send_beta_invitation(email, platform):
         with open(template_path, 'r') as file:
             template_content = file.read()
 
+        # Ensure Android link is properly encoded
+        android_link = settings.ANDROID_BETA_LINK.strip()
+        if not android_link.startswith('http'):
+            android_link = 'https://' + android_link
+
         # Replace placeholders with Cloudinary URLs
         html_content = template_content\
             .replace('{{ background_url }}', get_cloudinary_url('emailbackground.png'))\
             .replace('{{ logo_url }}', get_cloudinary_url('joyfuellogo.png'))\
             .replace('{{ laroye_url }}', get_cloudinary_url('laroye.png'))\
             .replace('{{ ios_link }}', settings.IOS_TESTFLIGHT_LINK)\
-            .replace('{{ android_link }}', settings.ANDROID_BETA_LINK)
+            .replace('{{ android_link }}', android_link)
 
         # Send email
         success, result = send_mailjet_email(
@@ -351,5 +356,9 @@ def test_registration(request):
             
     return Response({"message": "Invalid platform specified"}, status=400)
 
+@api_view(['GET'])
 def get_csrf_token(request):
+    """
+    Get CSRF token for frontend
+    """
     return JsonResponse({'csrfToken': get_token(request)}) 
