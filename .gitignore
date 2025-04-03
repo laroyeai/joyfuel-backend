@@ -1,0 +1,15 @@
+.DS_Store
+dump.rdb
+.env
+deploycommand.txt
+aws/
+__pycache__/
+venv/
+ext/
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+temp.html
+# Credentials
+credentials/
