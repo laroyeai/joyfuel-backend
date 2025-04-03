@@ -116,23 +116,15 @@ def send_beta_invitation(email, platform):
 
 @api_view(['POST'])
 def register_beta(request):
-    """
-    Register for beta testing
-    """
     try:
         email = request.data.get('email')
-        platform = request.data.get('platform', 'android').lower()  # Default to android if not specified
+        platform = request.data.get('platform', 'web')
         
         if not email:
             return Response({
-                "error": "Email is required"
+                "message": "Email is required"
             }, status=status.HTTP_400_BAD_REQUEST)
             
-        if platform not in ['android', 'ios']:
-            return Response({
-                "error": "Platform must be either 'android' or 'ios'"
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
         # Create or update beta user
         beta_user, created = BetaUser.objects.get_or_create(
             email=email,
@@ -158,7 +150,9 @@ def register_beta(request):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
     except Exception as e:
+        logger.error(f"Error in register_beta: {str(e)}")
         return Response({
+            "message": "An error occurred while registering for beta",
             "error": str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
