@@ -15,16 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from django.conf.urls.static import static
 
 def home(request):
     return HttpResponse('Welcome to JoyFuel')
 
+def health_check(request):
+    return JsonResponse({"status": "healthy", "message": "Django backend is running"})
+
 urlpatterns = [
     path('', home, name='home'),
     path('admin/', admin.site.urls),
     path('joyfuel/', include('app.urls')),
-    path('', include('webflow_integration.urls')),
+    path('health/', health_check, name='health_check'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

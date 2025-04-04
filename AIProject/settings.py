@@ -28,8 +28,9 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [
-    "django-env.eba-wbhhv3uk.ca-central-1.elasticbeanstalk.com",
-    "*"
+    'localhost',
+    '127.0.0.1',
+    '.pythonanywhere.com'  # This will allow any PythonAnywhere subdomain
 ]
 
 
@@ -46,8 +47,6 @@ INSTALLED_APPS = [
     'storages',
     'rest_framework',
     'app',
-    'webflow_integration',
-    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +83,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ]
 }
 
 # Database
@@ -96,6 +98,8 @@ DATABASES = {
     }
 }
 
+# Session Engine (using database-backed sessions)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 AUTH_USER_MODEL = 'app.User'
 # Password validation
@@ -135,58 +139,44 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # settings.py
 
 # Celery Configuration
-REDIS_HOST = config('REDIS_HOST', default='localhost')
-REDIS_URL = f"redis://{REDIS_HOST}:6379"
-CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_BROKER_URL = 'sqs://'  # Using SQLite as broker for free tier
+CELERY_RESULT_BACKEND = 'django-db'  # Using Django database as result backend
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
 # Email Configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'in-v3.mailjet.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('MAILJET_API_KEY')
-EMAIL_HOST_PASSWORD = config('MAILJET_SECRET_KEY')
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
 
-# Mailjet API Configuration
-MAILJET_API_KEY = config('MAILJET_API_KEY')
-MAILJET_API_SECRET = config('MAILJET_SECRET_KEY')
-MAILJET_FROM_EMAIL = config('MAILJET_FROM_EMAIL', default='analyze@laroye.ai')
+# CSRF Settings
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
 
 # CORS Settings
 CORS_ALLOWED_ORIGINS = [
-    'https://joyfuel-site.design.webflow.com',
-    'http://joyfuel-site.design.webflow.com',
-    'http://localhost:3000',  # For local development
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
 ]
-
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
-
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
@@ -202,19 +192,12 @@ CORS_ALLOW_HEADERS = [
 # Comment out or remove the CORS_ALLOW_ALL_ORIGINS setting
 # CORS_ALLOW_ALL_ORIGINS = True
 
-# Cloudinary Settings
-CLOUDINARY_CLOUD_NAME = config('CLOUDINARY_CLOUD_NAME', default='da15opquj')
-CLOUDINARY_API_KEY = config('CLOUDINARY_API_KEY', default='362169918819234')
-CLOUDINARY_API_SECRET = config('CLOUDINARY_API_SECRET', default='OBRvyI51XHZnjEq-Zm7VfIAzwL0')
+# AWS S3 Configuration
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='us-east-1')
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# Google Groups Configuration
-GOOGLE_SERVICE_ACCOUNT_FILE = os.path.join(BASE_DIR, 'credentials', 'google-service-account.json')
-GOOGLE_ADMIN_EMAIL = config('GOOGLE_ADMIN_EMAIL', default='analyze@laroye.ai')
-GOOGLE_ANDROID_BETA_GROUP = config('GOOGLE_ANDROID_BETA_GROUP', default='joyfuel-android-beta-testers@googlegroups.com')
-GOOGLE_GROUPS = {
-    'android_beta': config('GOOGLE_ANDROID_BETA_GROUP')
-}
-
-# Beta Testing Links
-ANDROID_BETA_LINK = config('ANDROID_BETA_LINK')
-IOS_TESTFLIGHT_LINK = config('IOS_TESTFLIGHT_LINK')

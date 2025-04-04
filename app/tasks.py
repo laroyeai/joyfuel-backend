@@ -73,7 +73,7 @@ def send_notification(to, subject, template_file_name, context, attachments=[]):
 
 
 def sendEmail(subject, to, html_content, text_content, attachments):
-    from_mail = settings.EMAIL_HOST_USER
+    from_mail = 'noreply@joyfuel.ai'  # Default from email
     email = EmailMultiAlternatives(subject, text_content, from_mail, to)
     email.attach_alternative(html_content, "text/html")
     for i in range(len(attachments)):
