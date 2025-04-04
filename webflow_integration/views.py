@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.decorators import api_view, method_decorator, csrf_exempt
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import BetaUserSerializer
 from .models import BetaUser
@@ -115,7 +115,6 @@ def send_beta_invitation(email, platform):
         return False, f"Error sending beta invitation: {str(e)}"
 
 @api_view(['POST'])
-@method_decorator(csrf_exempt, name='dispatch')
 def register_beta(request):
     try:
         email = request.data.get('email')

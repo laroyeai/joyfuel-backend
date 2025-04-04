@@ -28,10 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [
-    ".vercel.app",
-    ".now.sh",
-    "localhost",
-    "127.0.0.1",
+    "django-env.eba-wbhhv3uk.ca-central-1.elasticbeanstalk.com",
     "*"
 ]
 
@@ -55,7 +52,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -143,7 +139,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -180,8 +175,6 @@ CORS_ALLOWED_ORIGINS = [
     'https://joyfuel-site.design.webflow.com',
     'http://joyfuel-site.design.webflow.com',
     'http://localhost:3000',  # For local development
-    'https://joyfuel-backend-du56p3au0-laroye-ais-projects.vercel.app',
-    'https://www.laroye.ai',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -206,7 +199,7 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-# Remove CORS_ALLOW_ALL_ORIGINS as we're explicitly setting allowed origins
+# Comment out or remove the CORS_ALLOW_ALL_ORIGINS setting
 # CORS_ALLOW_ALL_ORIGINS = True
 
 # Cloudinary Settings
